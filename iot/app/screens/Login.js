@@ -148,7 +148,14 @@ export default class App extends React.Component {
           </Text>
           <TouchableOpacity
             onPress={() => {
-              this.setState({ page: REGISTER });
+              this.setState({
+                page: REGISTER,
+                passwordStatus: 'black',
+                emailStatus: 'black',
+                retypePasswordStatus: 'black',
+                email: '',
+                password: ''
+              });
             }}
           >
             <Text style={styles.registerButtonText}> Register Now!</Text>
@@ -238,7 +245,14 @@ export default class App extends React.Component {
           </Text>
           <TouchableOpacity
             onPress={() => {
-              this.setState({ page: LOGIN });
+              this.setState({
+                page: LOGIN,
+                passwordStatus: 'black',
+                emailStatus: 'black',
+                retypePasswordStatus: 'black',
+                email: '',
+                password: ''
+              });
             }}
           >
             <Text style={styles.registerButtonText}> Sign in.</Text>
