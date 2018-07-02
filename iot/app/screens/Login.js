@@ -88,7 +88,7 @@ export default class Login extends React.Component {
 
     this.LOGIN_VIEW = props => (
       <Transition appear="horizontal">
-        <View style={{ justfyContent: 'space-between' }}>
+        <View style={{ justifyContent: 'space-between' }}>
           <View style={styles.textInputWrapper}>
             <TextInput
               style={[styles.input, { borderColor: this.state.emailStatus }]}
@@ -484,6 +484,7 @@ export default class Login extends React.Component {
   }
 
   register() {
+    this.setState({ loading: true });
     getPerson(this.state.email, rs => {
       if (!rs) {
         let email = this.state.email;
@@ -496,11 +497,14 @@ export default class Login extends React.Component {
           hashedPassword.salt,
           this.state.name
         );
+        this.props.onVerified();
+        this.setState({ loading: false });
       } else {
         console.log('entered if statement (rs) and rs is: ', rs);
         this.setState({
           emailStatusText: 'Account for this email already exists!',
-          emailStatus: 'red'
+          emailStatus: 'red',
+          loading: false
         });
       }
     });

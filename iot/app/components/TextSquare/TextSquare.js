@@ -33,6 +33,7 @@ export default class TextSquare extends React.Component {
     let body = null;
     let sub = null;
     let expand = null;
+    let background = null;
     if (this.props.image) {
       body = (
         <Image
@@ -80,6 +81,9 @@ export default class TextSquare extends React.Component {
     }
 
     if (this.props.selected) {
+      background = this.props.selectedColor;
+    } else {
+      background = this.props.backgroundColor;
     }
 
     return (
@@ -91,7 +95,7 @@ export default class TextSquare extends React.Component {
           style={{
             width: this.props.width,
             height: this.props.height,
-            backgroundColor: this.props.backgroundColor,
+            backgroundColor: background,
             justifyContent: 'flex-end',
             margin: 0
           }}

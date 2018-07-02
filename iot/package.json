@@ -25,6 +25,7 @@
     "react-native": "~0.55.2",
     "react-native-bcrypt": "^2.4.0",
     "react-native-indicators": "^0.13.0",
+    "react-native-svg-charts": "^5.2.0",
     "react-native-transition": "^1.1.8",
     "react-navigation": "^2.5.2",
     "react-navigation-fluid-transitions": "^0.2.1"

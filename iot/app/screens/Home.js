@@ -6,10 +6,13 @@ import {
   ImageBackground,
   Dimensions,
   Animated,
-  Easing
+  Easing,
+  ScrollView,
+  StatusBar
 } from 'react-native';
 import { IMAGES } from '../resources/constants';
 import TextSquare from '../components/TextSquare/TextSquare';
+import Pie from '../components/PieChart/PieChart2';
 //TODO:
 /*
 Pie Chart for energy usage colored based on intensity (darker worse), add icons
@@ -28,8 +31,34 @@ make some sort of nest system
 
 const DIM = Dimensions.get('window');
 
-const TEXTCOLOR = '#70ff93';
+const TEXTCOLOR = '#66FF66';
+const SELECTED_BOTTON_COLOR = '#565656';
 const textColorArchives = ['#faff30', '#70ff93'];
+
+const MIN_PIE_HEIGHT = DIM.width;
+const MAX_PIE_HEIGHT = DIM.width;
+const fake_data = [
+  {
+    label: 'Fridge',
+    value: 4
+  },
+  {
+    label: 'Television',
+    value: 25
+  },
+  {
+    label: 'Air Conditioning',
+    value: 40
+  },
+  {
+    label: 'Unknown',
+    value: 21
+  },
+  {
+    label: 'Dryer',
+    value: 10
+  }
+];
 
 export default class Home extends React.Component {
   constructor() {
@@ -37,12 +66,14 @@ export default class Home extends React.Component {
 
     this.state = {
       dropDownHeight: new Animated.Value(0),
-      dropDownPage: null
+      dropDownPage: null,
+      piHeight: new Animated.Value(MAX_PIE_HEIGHT),
+      selectedSliceIndex: 1
     };
 
-    this.PAGE1 = <Text> Page 1 </Text>;
-    this.PAGE2 = <Text> Page 2 </Text>;
-    this.PAGE3 = <Text> Page 3 </Text>;
+    this.PAGE1 = <Text style={{ color: 'white' }}> Page 1 </Text>;
+    this.PAGE2 = <Text style={{ color: 'white' }}> Page 2 </Text>;
+    this.PAGE3 = <Text style={{ color: 'white' }}> Page 3 </Text>;
   }
 
   getCurrentDate() {
@@ -53,21 +84,25 @@ export default class Home extends React.Component {
     if (this.state.dropDownPage == page) {
       Animated.timing(this.state.dropDownHeight, {
         toValue: 0,
-        duration: 100
+        duration: 300,
+        easing: Easing.linear
       }).start();
+
       this.setState({ dropDownPage: null });
     } else {
       Animated.sequence([
-        // decay, then spring to start and twirl
         Animated.timing(this.state.dropDownHeight, {
-          toValue: 0,
-          duration: 100
+          toValue: DIM.height / 4 + 5,
+          duration: 300,
+          easing: Easing.linear
         }),
         Animated.timing(this.state.dropDownHeight, {
-          toValue: DIM.height / 3,
-          duration: 400
+          toValue: DIM.height / 4,
+          duration: 100,
+          easing: Easing.linear
         })
       ]).start();
+
       this.setState({ dropDownPage: page });
     }
   }
@@ -75,6 +110,7 @@ export default class Home extends React.Component {
   render() {
     return (
       <ImageBackground style={{ flex: 1 }} source={IMAGES.homeBackground1}>
+        <StatusBar barStyle="light-content" />
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.headerText}>Hello, Navin</Text>
@@ -93,6 +129,8 @@ export default class Home extends React.Component {
                 onPress={() => {
                   this.openDropDown(this.PAGE1);
                 }}
+                selectedColor={SELECTED_BOTTON_COLOR}
+                selected={this.state.dropDownPage == this.PAGE1}
               />
             </View>
             <View style={{ padding: 1 }}>
@@ -104,9 +142,11 @@ export default class Home extends React.Component {
                 textColor={TEXTCOLOR}
                 backgroundColor={'#303030'}
                 expand
+                selectedColor={SELECTED_BOTTON_COLOR}
                 onPress={() => {
                   this.openDropDown(this.PAGE2);
                 }}
+                selected={this.state.dropDownPage == this.PAGE2}
               />
             </View>
             <View style={{ padding: 1 }}>
@@ -117,21 +157,33 @@ export default class Home extends React.Component {
                 textColor={TEXTCOLOR}
                 backgroundColor={'#303030'}
                 expand
+                selectedColor={SELECTED_BOTTON_COLOR}
                 onPress={() => {
                   this.openDropDown(this.PAGE3);
                 }}
+                selected={this.state.dropDownPage == this.PAGE3}
               />
             </View>
           </View>
+
           <Animated.View
             style={{
               width: DIM.width,
               height: this.state.dropDownHeight,
-              backgroundColor: 'white'
+              backgroundColor: '#444444'
             }}
           >
             {this.state.dropDownPage}
           </Animated.View>
+
+          <View style={styles.body} pointerEvents="none">
+            <Pie
+              data={fake_data}
+              selected={fake_data[this.state.selectedSliceIndex]}
+              width={this.state.piHeight}
+              units={'W'}
+            />
+          </View>
         </View>
       </ImageBackground>
     );
@@ -141,30 +193,34 @@ export default class Home extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    padding: 30
+    alignItems: 'center'
   },
   header: {
     alignItems: 'center',
-    marginBottom: 20
+    justifyContent: 'center',
+    flex: 0.17
   },
   headerText: {
     textAlign: 'center',
-    fontSize: 50,
-
+    fontSize: 45,
     color: TEXTCOLOR
   },
   dateText: {
     textAlign: 'center',
-    fontSize: 25,
+    fontSize: 20,
     color: TEXTCOLOR
   },
   subHeader: {
     alignItems: 'center',
     flexDirection: 'row',
-    height: DIM.width / 3
+    height: DIM.width / 3,
+    flex: 0.25
   },
   body: {
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 0.5,
+    justifyContent: 'center',
+    alignItems: 'flex-end'
   }
 });
