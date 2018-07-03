@@ -67,8 +67,8 @@ export default class Home extends React.Component {
     this.state = {
       dropDownHeight: new Animated.Value(0),
       dropDownPage: null,
-      piHeight: new Animated.Value(MAX_PIE_HEIGHT),
-      selectedSliceIndex: 1
+      piHeight: DIM.width * 0.8,
+      selectedSliceIndex: null
     };
 
     this.PAGE1 = <Text style={{ color: 'white' }}> Page 1 </Text>;
@@ -117,7 +117,7 @@ export default class Home extends React.Component {
             <Text style={styles.dateText}>{this.getCurrentDate()}</Text>
           </View>
           <View style={styles.subHeader}>
-            <View style={{ padding: 1 }}>
+            <View style={{ marginRight: 1 }}>
               <TextSquare
                 width={(DIM.width - 8) / 3}
                 height={(DIM.width - 8) / 3}
@@ -133,7 +133,7 @@ export default class Home extends React.Component {
                 selected={this.state.dropDownPage == this.PAGE1}
               />
             </View>
-            <View style={{ padding: 1 }}>
+            <View>
               <TextSquare
                 width={(DIM.width - 8) / 3}
                 height={(DIM.width - 8) / 3}
@@ -149,7 +149,7 @@ export default class Home extends React.Component {
                 selected={this.state.dropDownPage == this.PAGE2}
               />
             </View>
-            <View style={{ padding: 1 }}>
+            <View style={{ marginLeft: 1 }}>
               <TextSquare
                 width={(DIM.width - 8) / 3}
                 height={(DIM.width - 8) / 3}
@@ -165,9 +165,9 @@ export default class Home extends React.Component {
               />
             </View>
           </View>
-
           <Animated.View
             style={{
+              margin: 0,
               width: DIM.width,
               height: this.state.dropDownHeight,
               backgroundColor: '#444444'
@@ -175,9 +175,16 @@ export default class Home extends React.Component {
           >
             {this.state.dropDownPage}
           </Animated.View>
-
-          <View style={styles.body} pointerEvents="none">
+          <View style={styles.body}>
+            <View style={{ marginTop: 75 }} />
             <Pie
+              onPressSlice={nextSliceIndex => {
+                if (nextSliceIndex != this.state.selectedSliceIndex) {
+                  this.setState({ selectedSliceIndex: nextSliceIndex });
+                } else {
+                  this.setState({ selectedSliceIndex: null });
+                }
+              }}
               data={fake_data}
               selected={fake_data[this.state.selectedSliceIndex]}
               width={this.state.piHeight}
@@ -198,7 +205,7 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 0.17
+    flex: 0.2
   },
   headerText: {
     textAlign: 'center',
@@ -212,9 +219,10 @@ const styles = StyleSheet.create({
   },
   subHeader: {
     alignItems: 'center',
+    justifyContent: 'flex-end',
     flexDirection: 'row',
     height: DIM.width / 3,
-    flex: 0.25
+    flex: 0.2
   },
   body: {
     alignItems: 'center',

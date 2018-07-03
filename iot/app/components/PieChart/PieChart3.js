@@ -6,17 +6,16 @@ import { Text } from 'react-native-svg';
 const DIM = Dimensions.get('window');
 
 /*
-EVERYTHING IS THE SAME SIZE
+EVERYTHING IS THE SAME SIZE, NO GETTING SMALLER
 */
 
 export default class Pie extends React.PureComponent {
   static propTypes = {
     data: PropTypes.array, //should come as an array of objects --> [{label: ___ , value: ___}]
     selected: PropTypes.object,
-    width: PropTypes.number,
+    width: PropTypes.object,
     units: PropTypes.string,
-    mode: PropTypes.string,
-    onPressSlice: PropTypes.func
+    mode: PropTypes.string
   };
 
   constructor(props) {
@@ -29,12 +28,8 @@ export default class Pie extends React.PureComponent {
 
   render() {
     let selectedSlice = this.props.selected;
-    let label = null;
-    let value = null;
-    if (selectedSlice) {
-      label = selectedSlice.label;
-      value = selectedSlice.value;
-    }
+    let label = selectedSlice.label;
+    let value = selectedSlice.value;
 
     let keys = [];
     this.props.data.forEach(element => {
@@ -59,9 +54,6 @@ export default class Pie extends React.PureComponent {
         arc: {
           outerRadius: label == key ? '110%' : '100%',
           padAngle: label === key ? 0.2 : 0.03
-        },
-        onPress: () => {
-          this.props.onPressSlice(index);
         }
       };
     });
@@ -77,7 +69,7 @@ export default class Pie extends React.PureComponent {
             fill={'#66FF66'}
             textAnchor={'middle'}
             alignmentBaseline={'middle'}
-            fontSize={12}
+            fontSize={15}
             stroke={'#66FF66'}
             strokeWidth={0.2}
           >
@@ -90,13 +82,12 @@ export default class Pie extends React.PureComponent {
     return (
       <View style={{ justifyContent: 'center' }}>
         <PieChart
-          animate={true}
           style={{
             height: this.props.width,
             width: this.props.width
           }}
           outerRadius={'80%'}
-          innerRadius={'10%'}
+          innerRadius={'20%'}
           data={data}
         >
           <Labels />
