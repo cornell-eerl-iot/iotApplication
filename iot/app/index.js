@@ -14,7 +14,9 @@ import {
   Easing
 } from 'react-native';
 import Login from './screens/Login';
-import Home from './screens/Home';
+import Home from './screens/Home/Home';
+import Energy from './screens/Home/Energy';
+import Day from './screens/Home/Day';
 import {
   Transition,
   createFluidNavigator,
@@ -25,19 +27,12 @@ export default class App extends React.Component {
   constructor() {
     super();
 
-    this.Home = props => (
-      <Transition appear="vertical">
-        <View style={{ flex: 1 }}>
-          <Home />
-        </View>
-      </Transition>
-    );
     this.Login = props => (
       <Transition>
         <View style={{ flex: 1 }}>
           <Login
             onVerified={() => {
-              props.navigation.navigate('home');
+              props.navigation.navigate('loggedIn');
               Keyboard.dismiss();
             }}
           />
@@ -45,9 +40,15 @@ export default class App extends React.Component {
       </Transition>
     );
 
-    this.Navigator = FluidNavigator(
+    let loggedIn = createFluidNavigator({
+      home: { screen: Home },
+      energy: { screen: Energy },
+      day: { screen: Day }
+    });
+
+    this.Navigator = createFluidNavigator(
       {
-        home: { screen: this.Home },
+        loggedIn: loggedIn,
         login: { screen: this.Login }
       },
       { navigationOptions: { gesturesEnabled: false } }

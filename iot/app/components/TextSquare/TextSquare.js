@@ -22,7 +22,8 @@ export default class TextSquare extends React.Component {
     expand: PropTypes.bool,
     onPress: PropTypes.func,
     selectedColor: PropTypes.string,
-    selected: PropTypes.bool
+    selected: PropTypes.bool,
+    component: PropTypes.any
   };
 
   constructor(props) {
@@ -100,8 +101,8 @@ export default class TextSquare extends React.Component {
             margin: 0
           }}
         >
-          <View style={{ alignItems: 'center' }}>
-            {body} {sub}
+          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+            {body} {this.props.component} {sub}
           </View>
           <View style={{ marginTop: 10 }} />
           <View style={{ alignItems: 'flex-end' }}>{expand}</View>

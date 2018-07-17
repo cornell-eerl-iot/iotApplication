@@ -62,7 +62,7 @@ export default class Pie extends React.PureComponent {
     let deviceWidth = this.props.width;
 
     return (
-      <View style={{ justifyContent: 'center' }} pointerEvents="none">
+      <View style={{ justifyContent: 'center' }}>
         <View zIndex={2}>
           <PieChart
             animate

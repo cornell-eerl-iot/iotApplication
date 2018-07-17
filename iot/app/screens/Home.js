@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { IMAGES } from '../resources/constants';
 import TextSquare from '../components/TextSquare/TextSquare';
-import Pie from '../components/PieChart/PieChart2';
+import Pie from '../components/PieChart/PieChart4';
 //TODO:
 /*
 Pie Chart for energy usage colored based on intensity (darker worse), add icons
@@ -131,6 +131,11 @@ export default class Home extends React.Component {
                 }}
                 selectedColor={SELECTED_BOTTON_COLOR}
                 selected={this.state.dropDownPage == this.PAGE1}
+                component={
+                  <View>
+                    <Text>Hello b</Text>
+                  </View>
+                }
               />
             </View>
             <View>

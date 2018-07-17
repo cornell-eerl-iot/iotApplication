@@ -15,7 +15,8 @@ export default class Pie extends React.PureComponent {
     selected: PropTypes.object,
     width: PropTypes.object,
     units: PropTypes.string,
-    mode: PropTypes.string
+    mode: PropTypes.string,
+    labelVisible: PropTypes.bool
   };
 
   constructor(props) {
@@ -53,7 +54,7 @@ export default class Pie extends React.PureComponent {
         },
         arc: {
           outerRadius: label == key ? '110%' : '100%',
-          padAngle: label === key ? 0.2 : 0.03
+          padAngle: label === key ? 0.2 : 0.3
         }
       };
     });
@@ -90,7 +91,9 @@ export default class Pie extends React.PureComponent {
           innerRadius={'20%'}
           data={data}
         >
-          <Labels />
+          {() => {
+            if (this.props.labelVisible) return <Labels />;
+          }}
         </PieChart>
       </View>
     );

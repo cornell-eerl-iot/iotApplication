@@ -1,36 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View } from 'react-native';
+import { View, Dimensions, Text } from 'react-native';
 import { PieChart } from 'react-native-svg-charts';
-import { Text } from 'react-native-svg';
-import { COLORS, DIM } from '../../resources/constants';
-/*
-EVERYTHING IS THE SAME SIZE
-*/
+import { DIM, COLORS } from '../../resources/constants';
+import { Text as TextSVG } from 'react-native-svg';
 
 export default class Pie extends React.PureComponent {
   static propTypes = {
     data: PropTypes.array, //should come as an array of objects --> [{label: ___ , value: ___}]
-    selected: PropTypes.object,
+    selectedSlice: PropTypes.object,
     width: PropTypes.number,
     units: PropTypes.string,
     onPressSlice: PropTypes.func,
     sliceColor: PropTypes.string,
     labelVisible: PropTypes.bool,
     fillColor: PropTypes.string,
-    labelColor: PropTypes.string
+    labelColor: PropTypes.string,
+    centerLabel: PropTypes.string
   };
 
   constructor(props) {
     super(props);
-
     this.state = {
       labelWidth: 0
     };
   }
 
   render() {
-    let selectedSlice = this.props.selected;
+    const { labelWidth } = this.state;
+    const { selectedSlice } = this.props;
     let label = null;
     let value = null;
     if (selectedSlice) {
@@ -67,12 +65,15 @@ export default class Pie extends React.PureComponent {
         }
       };
     });
+    const deviceWidth = DIM.width;
+
     const Labels = ({ slices, height, width }) => {
       return slices.map((slice, index) => {
         const { labelCentroid, pieCentroid, data } = slice;
         const text = data.key + ' ' + data.value + '%';
+
         return (
-          <Text
+          <TextSVG
             key={index}
             x={pieCentroid[0]}
             y={pieCentroid[1]}
@@ -84,14 +85,18 @@ export default class Pie extends React.PureComponent {
             strokeWidth={0.5}
           >
             {text}
-          </Text>
+          </TextSVG>
         );
       });
     };
     let tempLabels = null;
     if (this.props.labelVisible) tempLabels = <Labels />;
+
+    let centerLabel = null;
+    if (this.props.centerLabel) centerLabel = this.props.centerLabel;
+
     return (
-      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ justifyContent: 'center' }}>
         <PieChart
           animate={true}
           style={{
@@ -105,7 +110,21 @@ export default class Pie extends React.PureComponent {
         >
           {tempLabels}
         </PieChart>
-        <Text>{'hello'}</Text>
+        <Text
+          onLayout={({ nativeEvent: { layout: { width } } }) => {
+            this.setState({ labelWidth: width });
+          }}
+          style={{
+            position: 'absolute',
+            left: deviceWidth / 2 - labelWidth / 2,
+            textAlign: 'center',
+            fontSize: 50,
+            fontWeight: 'bold',
+            color: COLORS.yellow
+          }}
+        >
+          {centerLabel}
+        </Text>
       </View>
     );
   }
