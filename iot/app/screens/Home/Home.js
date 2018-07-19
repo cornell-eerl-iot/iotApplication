@@ -13,20 +13,26 @@ import {
   Image
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { IMAGES } from '../../resources/constants';
 import TextSquare from '../../components/TextSquare/TextSquare';
 import Pie from '../../components/PieChart/PieChart4';
 import { Transition } from 'react-navigation-fluid-transitions';
-import { COLORS, DIM, fake_pie_data } from '../../resources/constants';
+import {
+  COLORS,
+  DIM,
+  fake_pie_data,
+  IMAGES,
+  EMOTIONS
+} from '../../resources/constants';
 
 const paddingBetweenSquares = 10;
 const flexOfBody = 0.7;
 const TEXTCOLOR = 'white';
-
+const FAKE_NUMBER_BASE = 2000;
+const UNIT = 'W';
 const COLOR_THEME_2 = ['#050505', '#004FFF', '#31AFD4', '#902D41', '#FF007F'];
 const COLOR_THEME_3 = ['#00CECB', '#001F54', '#FF5E5B', '#00CECB', '#FFED66']; // really like this one
 const COLOR_THEME_1 = ['#001F54', '#00CECB', '#FF5E5B', '#001F54', '#FFED66'];
-
+const CURRENT_EMOTION_STATUS = EMOTIONS.veryHappy;
 /*
 TODO ADD A smiley face menu, appliance menu, percent an appliance used
 
@@ -39,7 +45,7 @@ export default class Home extends React.Component {
     this.widthOfSquares = (DIM.width - paddingBetweenSquares * 4) / 2;
   }
   getCurrentDate() {
-    return '6/21';
+    return '7/18';
   }
 
   render() {
@@ -49,19 +55,27 @@ export default class Home extends React.Component {
         <View style={styles.header}>
           <Text style={styles.headerText}>Hello, Navin</Text>
           <Text style={styles.dateText}>{this.getCurrentDate()}</Text>
-          <Transition shared={'logo'}>
-            <Animatable.Image
-              animation="pulse"
-              easing="ease-out"
-              iterationCount="infinite"
-              source={require('../../resources/electricity512px.png')}
-              style={{
-                height: this.widthOfSquares,
-                width: this.widthOfSquares
-              }}
-              resizeMode={'contain'}
-            />
-          </Transition>
+          <View
+            style={{
+              justifyContent: 'center',
+              width: DIM.width,
+              alignItems: 'center'
+            }}
+          >
+            <Transition shared={'logo'}>
+              <Animatable.Image
+                animation="pulse"
+                easing="ease-out"
+                iterationCount="infinite"
+                source={IMAGES.electricity}
+                style={{
+                  height: this.widthOfSquares,
+                  width: this.widthOfSquares
+                }}
+                resizeMode={'contain'}
+              />
+            </Transition>
+          </View>
         </View>
         <View style={styles.body}>
           <View style={{ marginBottom: 10, flexDirection: 'row' }}>
@@ -87,20 +101,18 @@ export default class Home extends React.Component {
                 <Transition shared={'pie'}>
                   <Pie
                     data={fake_pie_data}
-                    width={this.widthOfSquares * 0.8}
+                    width={this.widthOfSquares}
                     sliceColor={COLORS.yellow}
                     fillColor={COLORS.red}
+                    centerLabel={FAKE_NUMBER_BASE + '\n' + UNIT}
+                    centerLabelStyle={{
+                      textAlign: 'center',
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      color: COLORS.yellow
+                    }}
                   />
                 </Transition>
-                <Text
-                  style={{
-                    color: '#ffff',
-                    fontSize: 20,
-                    textAlign: 'center'
-                  }}
-                >
-                  2000 W
-                </Text>
               </Animatable.View>
             </TouchableOpacity>
 
@@ -128,6 +140,7 @@ export default class Home extends React.Component {
                   }}
                   source={IMAGES.trends}
                 />
+
                 <Transition shared={'buttonText1'}>
                   <Text
                     style={{
@@ -158,7 +171,26 @@ export default class Home extends React.Component {
                     backgroundColor: COLORS.red
                   }
                 ]}
-              />
+              >
+                <Image
+                  style={{
+                    width: this.widthOfSquares / 2,
+                    height: this.widthOfSquares / 2
+                  }}
+                  source={CURRENT_EMOTION_STATUS.source}
+                />
+                <Transition>
+                  <Text
+                    style={{
+                      color: '#ffff',
+                      fontSize: 20,
+                      textAlign: 'center'
+                    }}
+                  >
+                    {CURRENT_EMOTION_STATUS.tagLine}
+                  </Text>
+                </Transition>
+              </Animatable.View>
             </TouchableOpacity>
             <TouchableOpacity>
               <Animatable.View
@@ -174,7 +206,15 @@ export default class Home extends React.Component {
                     backgroundColor: COLORS.yellow
                   }
                 ]}
-              />
+              >
+                <Image
+                  style={{
+                    width: this.widthOfSquares / 2,
+                    height: this.widthOfSquares / 2
+                  }}
+                  source={IMAGES.house}
+                />
+              </Animatable.View>
             </TouchableOpacity>
           </View>
         </View>
@@ -193,7 +233,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flex: 0.4,
-    padding: 20
+    marginTop: 20,
+    width: DIM.width
   },
   headerText: {
     textAlign: 'center',

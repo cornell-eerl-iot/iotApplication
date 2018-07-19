@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Dimensions, Text } from 'react-native';
+import { View, Dimensions, Text, ImageBackground } from 'react-native';
 import { PieChart } from 'react-native-svg-charts';
-import { DIM, COLORS } from '../../resources/constants';
+import { DIM, COLORS, IMAGES } from '../../resources/constants';
 import { Text as TextSVG } from 'react-native-svg';
 
 export default class Pie extends React.PureComponent {
@@ -54,18 +54,17 @@ export default class Pie extends React.PureComponent {
         svg: {
           stroke: this.props.sliceColor,
           strokeWidth: 1,
-          fill: this.props.fillColor
+          fill: label == key ? this.props.sliceColor : this.props.fillColor
         },
         arc: {
-          outerRadius: label == key ? '115%' : '100%',
-          padAngle: label === key ? 0.2 : 0.05
+          outerRadius: label == key ? '100%' : '90%',
+          padAngle: label === key ? 0.08 : 0.05
         },
-        onPress: () => {
+        onPressIn: () => {
           if (this.props.onPressSlice) this.props.onPressSlice(index);
         }
       };
     });
-    const deviceWidth = DIM.width;
 
     const Labels = ({ slices, height, width }) => {
       return slices.map((slice, index) => {
@@ -77,11 +76,11 @@ export default class Pie extends React.PureComponent {
             key={index}
             x={pieCentroid[0]}
             y={pieCentroid[1]}
-            fill={this.props.labelColor}
+            fill={label == data.key ? 'black' : this.props.labelColor}
             textAnchor={'middle'}
             alignmentBaseline={'middle'}
             fontSize={12}
-            stroke={this.props.labelColor}
+            stroke={label == data.key ? 'black' : this.props.labelColor}
             strokeWidth={0.5}
           >
             {text}
@@ -103,25 +102,25 @@ export default class Pie extends React.PureComponent {
             height: this.props.width,
             width: this.props.width
           }}
-          outerRadius={'80%'}
+          outerRadius={'90%'}
           innerRadius={'50%'}
           data={data}
           belowChart={true}
         >
           {tempLabels}
         </PieChart>
+
         <Text
           onLayout={({ nativeEvent: { layout: { width } } }) => {
             this.setState({ labelWidth: width });
           }}
-          style={{
-            position: 'absolute',
-            left: deviceWidth / 2 - labelWidth / 2,
-            textAlign: 'center',
-            fontSize: 50,
-            fontWeight: 'bold',
-            color: COLORS.yellow
-          }}
+          style={[
+            {
+              position: 'absolute',
+              left: this.props.width / 2 - labelWidth / 2
+            },
+            this.props.centerLabelStyle
+          ]}
         >
           {centerLabel}
         </Text>

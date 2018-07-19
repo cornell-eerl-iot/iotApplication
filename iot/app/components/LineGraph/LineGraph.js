@@ -7,6 +7,9 @@ import moment from 'moment';
 
 import { G, Line } from 'react-native-svg';
 import { COLORS, DIM } from '../../resources/constants';
+
+const UNIT = 'W';
+
 const CustomGrid = ({ x, y, data, ticks }) => (
   <G>
     {// Horizontal grid
@@ -104,7 +107,7 @@ export default class LineGraph extends React.Component {
               fontSize: 10
             }}
             numberOfTicks={7}
-            formatLabel={value => `${value}W`}
+            formatLabel={value => `${value}` + UNIT}
           />
           <ScrollView
             showsHorizontalScrollIndicator={false}

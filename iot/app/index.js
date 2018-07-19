@@ -43,7 +43,7 @@ export default class App extends React.Component {
     let loggedIn = createFluidNavigator({
       home: { screen: Home },
       energy: { screen: Energy },
-      day: { screen: Day }
+      day: { screen: Day, navigationOptions: { gesturesEnabled: false } }
     });
 
     this.Navigator = createFluidNavigator(

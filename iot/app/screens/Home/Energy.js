@@ -15,7 +15,7 @@ import * as Animatable from 'react-native-animatable';
 import { Transition } from 'react-navigation-fluid-transitions';
 import LineGraph from '../../components/LineGraph/LineGraph.js';
 import TabBar from '../../components/TabBar/TabBar.js';
-import { COLORS, DIM } from '../../resources/constants';
+import { COLORS, DIM, IMAGES } from '../../resources/constants';
 
 const initialLayout = {
   height: 0,
@@ -243,7 +243,7 @@ export default class Energy extends React.Component {
               <Text
                 style={{
                   color: '#fff',
-                  fontSize: 60,
+                  fontSize: 50,
                   textAlign: 'center'
                 }}
               >
@@ -251,19 +251,6 @@ export default class Energy extends React.Component {
               </Text>
             </Transition>
           </View>
-          <Transition shared={'logo'}>
-            <Animatable.Image
-              animation="pulse"
-              easing="ease-out"
-              iterationCount="infinite"
-              source={require('../../resources/electricity512px.png')}
-              style={{
-                height: 50,
-                width: 50
-              }}
-              resizeMode={'contain'}
-            />
-          </Transition>
         </View>
         <View style={{ height: 50, padding: 15 }}>
           <TabBar
@@ -282,10 +269,34 @@ export default class Energy extends React.Component {
         <View style={{ marginTop: 20 }} />
         <View style={styles.body}>{this._renderTab()}</View>
         <View>
-          <Text>
-            Energy Usage (KWH), Peak, How you did in comparison to last week,
-            percent an appliance was used durign that time period etc
-          </Text>
+          <Text>Water usage data and stats</Text>
+        </View>
+        <View
+          style={{
+            position: 'absolute',
+            left: 10,
+            right: 0,
+            bottom: 0,
+            top: 20,
+            width: 75,
+            height: 75
+          }}
+        >
+          <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+            <Transition shared={'logo'}>
+              <Animatable.Image
+                animation="pulse"
+                easing="ease-out"
+                iterationCount="infinite"
+                source={IMAGES.electricity}
+                style={{
+                  height: 75,
+                  width: 75
+                }}
+                resizeMode={'contain'}
+              />
+            </Transition>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -298,6 +309,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     flex: 0.2,
     padding: 20,
+    width: DIM.width,
     flexDirection: 'row'
   }
 });
+/*
+Energy Usage (KWH), Peak, How you did in comparison to last week,
+percent an appliance was used during that time period etc
+*/

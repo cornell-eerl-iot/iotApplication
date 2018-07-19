@@ -1,5 +1,8 @@
 {
   "expo": {
-    "sdkVersion": "28.0.0"
+    "sdkVersion": "28.0.0",
+    "splash": {
+      "image": "./app/resources/consrv/logoBlack.png"
+    }
   }
 }

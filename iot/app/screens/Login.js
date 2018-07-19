@@ -346,7 +346,7 @@ export default class Login extends React.Component {
         >
           <Animated.View style={styles.header}>
             <Animated.Image
-              source={require('../resources/electricity512px.png')}
+              source={IMAGES.electricity}
               style={{ height: this.imageHeight, width: this.imageHeight }}
               resizeMode={'contain'}
             />
