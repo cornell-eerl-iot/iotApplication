@@ -1,0 +1,18 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { COLORS, DIM, IMAGES } from '../../resources/constants';
+
+export default class Login extends React.Component {
+  static propTypes = {};
+
+  constructor(props) {
+    super(props);
+
+    this.state = {};
+  }
+
+  render() {
+    return null;
+  }
+}

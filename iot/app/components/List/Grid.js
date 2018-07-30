@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import { COLORS, APPLIANCES, IMAGES, DIM } from '../../resources/constants';
 import * as Animatable from 'react-native-animatable';
-const BACKGROUND_COLOR = COLORS.lightBlue;
 
 export default class Grid extends React.Component {
   static propTypes = {
@@ -44,13 +43,17 @@ export default class Grid extends React.Component {
     let delayTemp = 0;
     for (var x = 0; x < this.props.data.length; x++) {
       let y = counter;
-      delayTemp += 25;
+      delayTemp += 40;
       row.push(
         <Animatable.View
           key={this.props.data[counter].title}
           animation="flipInX"
           delay={delayTemp}
           duration={500}
+          style={{
+            borderRadius: 1500,
+            backgroundColor: '#ffffff20'
+          }}
         >
           <TouchableOpacity
             onPress={() => this.props.onPress(y)}
@@ -61,8 +64,10 @@ export default class Grid extends React.Component {
                 alignItems: 'center',
                 width: width,
                 height: width,
-                backgroundColor: BACKGROUND_COLOR,
-                marginBottom: 10
+                backgroundColor: COLORS.lightBlue + '10',
+                shadowOffset: { width: 5, height: 5 },
+                shadowColor: COLORS.black,
+                shadowOpacity: 0.2
               }
             ]}
           >
@@ -73,7 +78,6 @@ export default class Grid extends React.Component {
               }}
               source={this.props.data[counter].source}
             />
-            <View style={styles.overlay} />
           </TouchableOpacity>
         </Animatable.View>
       );
@@ -84,20 +88,26 @@ export default class Grid extends React.Component {
       <ScrollView>
         <View
           style={{
-            width: DIM.width,
-            justifyContent: 'space-around',
-            padding: 1
+            padding: 15
           }}
         >
           <View
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              alignItems: 'center',
-              flexWrap: 'wrap'
+              borderRadius: 50
             }}
           >
-            {row}
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                backgroundColor: COLORS.darkBlue + '10',
+                borderRadius: 50
+              }}
+            >
+              {row}
+            </View>
           </View>
         </View>
       </ScrollView>

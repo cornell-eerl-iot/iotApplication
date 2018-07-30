@@ -13,7 +13,7 @@ import {
   Animated,
   Easing
 } from 'react-native';
-import Login from './screens/Login';
+import LoginHome from './screens/Login/LoginHome';
 import Home from './screens/Home/Home';
 import Energy from './screens/Home/Energy';
 import Day from './screens/Home/Day';
@@ -30,7 +30,7 @@ export default class App extends React.Component {
     this.Login = props => (
       <Transition>
         <View style={{ flex: 1 }}>
-          <Login
+          <LoginHome
             onVerified={() => {
               props.navigation.navigate('loggedIn');
               Keyboard.dismiss();
@@ -48,8 +48,8 @@ export default class App extends React.Component {
 
     this.Navigator = createFluidNavigator(
       {
-        loggedIn: loggedIn,
-        login: { screen: this.Login }
+        login: { screen: this.Login },
+        loggedIn: loggedIn
       },
       { navigationOptions: { gesturesEnabled: false } }
     );

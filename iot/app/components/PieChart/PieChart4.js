@@ -2,9 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View, Dimensions, Text, ImageBackground } from 'react-native';
 import { PieChart } from 'react-native-svg-charts';
-import { DIM, COLORS, IMAGES } from '../../resources/constants';
+import {
+  DIM,
+  COLORS,
+  IMAGES,
+  applianceImageMap
+} from '../../resources/constants';
 import { Text as TextSVG } from 'react-native-svg';
-
+import { Circle, G, Image } from 'react-native-svg';
 export default class Pie extends React.PureComponent {
   static propTypes = {
     data: PropTypes.array, //should come as an array of objects --> [{label: ___ , value: ___}]
@@ -32,19 +37,19 @@ export default class Pie extends React.PureComponent {
     let label = null;
     let value = null;
     if (selectedSlice) {
-      label = selectedSlice.label;
-      value = selectedSlice.value;
+      label = selectedSlice.title;
+      value = selectedSlice.percentOfDay;
     }
 
     let keys = [];
     this.props.data.forEach(element => {
-      keys.push(element.label);
+      keys.push(element.title);
     });
 
     let values = [];
 
     this.props.data.forEach(element => {
-      values.push(element.value);
+      values.push(element.percentOfDay);
     });
 
     const data = keys.map((key, index) => {
@@ -52,13 +57,12 @@ export default class Pie extends React.PureComponent {
         key,
         value: values[index],
         svg: {
-          stroke: this.props.sliceColor,
-          strokeWidth: 1,
-          fill: label == key ? this.props.sliceColor : this.props.fillColor
+          strokeWidth: 2,
+          fill: label == key ? this.props.sliceColor : COLORS.lightBlue
         },
         arc: {
-          outerRadius: label == key ? '100%' : '90%',
-          padAngle: label === key ? 0.08 : 0.05
+          outerRadius: label == key ? '91%' : '90%',
+          padAngle: label === key ? 0.08 : 0.04
         },
         onPressIn: () => {
           if (this.props.onPressSlice) this.props.onPressSlice(index);
@@ -67,6 +71,25 @@ export default class Pie extends React.PureComponent {
     });
 
     const Labels = ({ slices, height, width }) => {
+      return slices.map((slice, index) => {
+        const { labelCentroid, pieCentroid, data } = slice;
+        return (
+          <G key={index} x={labelCentroid[0]} y={labelCentroid[1]}>
+            <Image
+              x={-15}
+              y={15}
+              width={30}
+              height={30}
+              preserveAspectRatio="xMidYMid slice"
+              opacity="1"
+              href={applianceImageMap[data.key]}
+            />
+          </G>
+        );
+      });
+    };
+
+    /*const Labels = ({ slices, height, width }) => {
       return slices.map((slice, index) => {
         const { labelCentroid, pieCentroid, data } = slice;
         const text = data.key + ' ' + data.value + '%';
@@ -87,7 +110,7 @@ export default class Pie extends React.PureComponent {
           </TextSVG>
         );
       });
-    };
+    };*/
     let tempLabels = null;
     if (this.props.labelVisible) tempLabels = <Labels />;
 
@@ -103,7 +126,7 @@ export default class Pie extends React.PureComponent {
             width: this.props.width
           }}
           outerRadius={'90%'}
-          innerRadius={'50%'}
+          innerRadius={'55%'}
           data={data}
           belowChart={true}
         >

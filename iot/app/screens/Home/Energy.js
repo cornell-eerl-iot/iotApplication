@@ -16,17 +16,49 @@ import { Transition } from 'react-navigation-fluid-transitions';
 import LineGraph from '../../components/LineGraph/LineGraph.js';
 import TabBar from '../../components/TabBar/TabBar.js';
 import { COLORS, DIM, IMAGES } from '../../resources/constants';
+import { LinearGradient } from 'expo';
+import { ProgressCircle } from 'react-native-svg-charts';
 
+const UNIT = 'G';
+
+const INTERVAL = 2000;
+const MAX_FAKE_DATA = 100;
 const initialLayout = {
   height: 0,
   width: DIM.width
 };
-
-const MAX_FAKE_DATA = 100;
-const INTERVAL = 2000;
-
 const fake_power_data = []; //day data
 const fake_week_data = [
+  {
+    power: Math.floor(Math.random() * 20) + 2000,
+    time: 'S'
+  },
+  {
+    power: Math.floor(Math.random() * 20) + 2000,
+    time: 'M'
+  },
+  {
+    power: Math.floor(Math.random() * 20) + 2000,
+    time: 'T'
+  },
+  {
+    power: Math.floor(Math.random() * 20) + 2000,
+    time: 'W'
+  },
+  {
+    power: Math.floor(Math.random() * 20) + 2000,
+    time: 'T'
+  },
+  {
+    power: Math.floor(Math.random() * 20) + 2000,
+    time: 'F'
+  },
+  {
+    power: Math.floor(Math.random() * 20) + 2000,
+    time: 'S'
+  }
+];
+const fake_week_data_other = [
   {
     power: Math.floor(Math.random() * 20) + 2000,
     time: 'S'
@@ -116,7 +148,7 @@ export default class Energy extends React.Component {
     super();
 
     this.state = {
-      selected: TAB_TITLES[1]
+      selected: TAB_TITLES[0]
     };
 
     let fake_day_data = [];
@@ -151,18 +183,38 @@ export default class Energy extends React.Component {
       });
     }
     this.dayView = (
-      <LineGraph data={fake_day_data} mode={'other'} maxPointsOnScreen={25} />
+      <LineGraph
+        data={fake_day_data}
+        mode={'other'}
+        maxPointsOnScreen={25}
+        unit={UNIT}
+      />
     );
     this.weekView = (
-      <LineGraph data={fake_week_data} mode={'other'} maxPointsOnScreen={8} />
+      <LineGraph
+        data={fake_week_data}
+        mode={'other'}
+        maxPointsOnScreen={8}
+        unit={UNIT}
+      />
     );
 
     this.monthView = (
-      <LineGraph data={fake_month_data} mode={'other'} maxPointsOnScreen={32} />
+      <LineGraph
+        data={fake_month_data}
+        mode={'other'}
+        maxPointsOnScreen={32}
+        unit={UNIT}
+      />
     );
 
     this.yearView = (
-      <LineGraph data={fake_year_data} mode={'other'} maxPointsOnScreen={13} />
+      <LineGraph
+        data={fake_year_data}
+        mode={'other'}
+        maxPointsOnScreen={13}
+        unit={UNIT}
+      />
     );
   }
 
@@ -222,8 +274,13 @@ export default class Energy extends React.Component {
   render() {
     // if (this.state.fakeDayPowerData.length > MAX_FAKE_DATA)
     //   clearInterval(this._interval);
+
     return (
-      <View
+      <LinearGradient
+        style={styles.container}
+        start={[0, 0.5]}
+        end={[0, 1.0]}
+        colors={COLORS.darkBlueGradient}
         style={{
           flex: 1,
           backgroundColor: COLORS.lightBlue,
@@ -244,7 +301,10 @@ export default class Energy extends React.Component {
                 style={{
                   color: '#fff',
                   fontSize: 50,
-                  textAlign: 'center'
+                  textAlign: 'center',
+                  fontWeight: '100',
+
+                  letterSpacing: 5
                 }}
               >
                 Trends
@@ -257,20 +317,21 @@ export default class Energy extends React.Component {
             selectedColor={COLORS.yellow}
             unselectedColor={'transparent'}
             textSelectedColor={COLORS.darkBlue}
-            textUnselectedColor={COLORS.darkBlue}
-            borderColor={COLORS.darkBlue}
+            textUnselectedColor={COLORS.white}
+            borderColor={COLORS.white}
             tabBarHeight={35}
-            style={{ fontSize: 15, width: DIM.width * 0.9, fontWeight: 'bold' }}
+            style={{ fontSize: 15, width: DIM.width * 0.9 }}
             titles={TAB_TITLES}
             selected={this.state.selected}
             onPress={title => this.setState({ selected: title })}
           />
         </View>
+
         <View style={{ marginTop: 20 }} />
+
         <View style={styles.body}>{this._renderTab()}</View>
-        <View>
-          <Text>Water usage data and stats</Text>
-        </View>
+
+        <View style={{ flex: 0.1 }} />
         <View
           style={{
             position: 'absolute',
@@ -285,20 +346,21 @@ export default class Energy extends React.Component {
           <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
             <Transition shared={'logo'}>
               <Animatable.Image
-                animation="pulse"
-                easing="ease-out"
-                iterationCount="infinite"
                 source={IMAGES.electricity}
                 style={{
+                  left: -15,
                   height: 75,
-                  width: 75
+                  width: 75,
+                  shadowOffset: { width: 2, height: 2 },
+                  shadowColor: COLORS.black,
+                  shadowOpacity: 0.4
                 }}
                 resizeMode={'contain'}
               />
             </Transition>
           </TouchableOpacity>
         </View>
-      </View>
+      </LinearGradient>
     );
   }
 }
@@ -307,13 +369,15 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     justifyContent: 'space-around',
-    flex: 0.2,
+    flex: 0.1,
     padding: 20,
     width: DIM.width,
     flexDirection: 'row'
+  },
+  body: {
+    flex: 1
   }
 });
 /*
-Energy Usage (KWH), Peak, How you did in comparison to last week,
-percent an appliance was used during that time period etc
+
 */

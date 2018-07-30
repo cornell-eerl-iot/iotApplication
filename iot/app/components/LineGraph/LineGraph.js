@@ -8,8 +8,6 @@ import moment from 'moment';
 import { G, Line } from 'react-native-svg';
 import { COLORS, DIM } from '../../resources/constants';
 
-const UNIT = 'W';
-
 const CustomGrid = ({ x, y, data, ticks }) => (
   <G>
     {// Horizontal grid
@@ -46,7 +44,8 @@ export default class LineGraph extends React.Component {
     'time' --> means something of the 9:32 nature, where moment could parse it
     'other' --> special axis labels
     */
-    maxPointsOnScreen: PropTypes.number
+    maxPointsOnScreen: PropTypes.number,
+    unit: PropTypes.string
   };
 
   constructor(props) {
@@ -57,7 +56,6 @@ export default class LineGraph extends React.Component {
     //Determine preferred width:
     let excess = this.props.data.length - this.props.maxPointsOnScreen;
     if (excess > 0) {
-      console.log('entered if statement');
       width =
         DIM.width +
         (this.props.data.length - this.props.maxPointsOnScreen - 1) *
@@ -82,21 +80,18 @@ export default class LineGraph extends React.Component {
     return (
       <View
         style={{
-          height: 225,
-          backgroundColor: COLORS.darkBlue,
+          height: 325,
           borderRadius: 10
         }}
       >
         <View
           style={{
-            flexDirection: 'row',
-            flex: 1,
-            height: 200
+            flexDirection: 'row'
           }}
         >
           <YAxis
             style={{
-              height: 200,
+              height: 300,
               width: DIM.width * 0.15
             }}
             data={this.props.data}
@@ -107,7 +102,7 @@ export default class LineGraph extends React.Component {
               fontSize: 10
             }}
             numberOfTicks={7}
-            formatLabel={value => `${value}` + UNIT}
+            formatLabel={value => `${value}` + this.props.unit}
           />
           <ScrollView
             showsHorizontalScrollIndicator={false}
@@ -121,7 +116,7 @@ export default class LineGraph extends React.Component {
               <LineChart
                 numberOfTicks={7}
                 xScale={scale.scaleTime}
-                style={{ width: width, height: 200 }}
+                style={{ width: width, height: 300 }}
                 data={this.props.data}
                 yAccessor={({ item }) => item.power}
                 xAccessor={({ index }) => index}
