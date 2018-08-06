@@ -99,7 +99,7 @@ export default class ModernCard extends React.Component {
             {
               height: this.state.height,
               backgroundColor: this.state.isExpanded
-                ? COLORS.lightBlue
+                ? 'transparent'
                 : 'transparent'
             }
           ]}

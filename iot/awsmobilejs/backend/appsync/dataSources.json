@@ -1,0 +1,37 @@
+{
+    "dataSources": [
+        {
+            "name": "ElectricityData",
+            "description": "Data source created by the console.",
+            "type": "AMAZON_DYNAMODB",
+            "serviceRoleArn": "{managed-by-awsmobile-cli}",
+            "dynamodbConfig": {
+                "tableName": "iotelectricitymonito-mobilehub-1300005098-ElectricityData",
+                "awsRegion": "us-east-2",
+                "useCallerCredentials": false
+            }
+        }
+    ],
+    "tables": [
+        {
+            "AttributeDefinitions": [
+                {
+                    "AttributeName": "userId",
+                    "AttributeType": "S"
+                }
+            ],
+            "TableName": "iotelectricitymonito-mobilehub-1300005098-ElectricityData",
+            "KeySchema": [
+                {
+                    "AttributeName": "userId",
+                    "KeyType": "HASH"
+                }
+            ],
+            "ProvisionedThroughput": {
+                "ReadCapacityUnits": 3,
+                "WriteCapacityUnits": 3
+            },
+            "Region": "us-east-2"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "name": "iot-electricity-monitoring",
+    "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+    "userPoolConfig": {
+        "userPoolId": "us-east-2_ojGSUQkzf",
+        "awsRegion": "us-east-2",
+        "defaultAction": "ALLOW",
+        "appIdClientRegex": null
+    }
+}

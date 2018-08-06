@@ -1,0 +1,37 @@
+[
+    {
+        "typeName": "Mutation",
+        "fieldName": "createIotData",
+        "dataSourceName": "ElectricityData",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.createIotData.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.createIotData.response"
+    },
+    {
+        "typeName": "Mutation",
+        "fieldName": "deleteIotData",
+        "dataSourceName": "ElectricityData",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.deleteIotData.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.deleteIotData.response"
+    },
+    {
+        "typeName": "Mutation",
+        "fieldName": "updateIotData",
+        "dataSourceName": "ElectricityData",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.updateIotData.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Mutation.updateIotData.response"
+    },
+    {
+        "typeName": "Query",
+        "fieldName": "getIotData",
+        "dataSourceName": "ElectricityData",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Query.getIotData.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Query.getIotData.response"
+    },
+    {
+        "typeName": "Query",
+        "fieldName": "listIotData",
+        "dataSourceName": "ElectricityData",
+        "requestMappingTemplate": "{managed-by-awsmobile-cli}:Query.listIotData.request",
+        "responseMappingTemplate": "{managed-by-awsmobile-cli}:Query.listIotData.response"
+    }
+]

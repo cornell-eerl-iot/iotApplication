@@ -51,7 +51,11 @@ export const IMAGES = {
   toasterBlack: require('../resources/appliances/toasterBlack.png'),
   dryerBlack: require('../resources/appliances/dryerBlack.png'),
   unknownBlack: require('../resources/appliances/unknownBlack.png'),
-  ovenBlack: require('../resources/appliances/ovenBlack.png')
+  ovenBlack: require('../resources/appliances/ovenBlack.png'),
+  facebook: require('../resources/facebook.png'),
+  gmail: require('../resources/gmail.png'),
+  signOut: require('../resources/signOut.png'),
+  info: require('../resources/info.png')
 };
 
 export const COLORS = {
@@ -59,6 +63,7 @@ export const COLORS = {
   darkBlueGradient: ['#001F54', '#003ba3'],
   redGradient: ['#FF5E5B', '#ff706d'],
   yellowGradient: ['#FFED66', '#f9f263'],
+  yellowBlueGradient: ['#FFED66', '#001F54'],
   darkBlue: '#001F54',
   lightBlue: '#00CECB',
   red: '#FF5E5B',

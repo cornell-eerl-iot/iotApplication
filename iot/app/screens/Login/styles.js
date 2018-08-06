@@ -11,7 +11,41 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     width: DIM.width
   },
-
+  subHeader: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 15
+  },
+  body: {
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  textSubmit: {
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  footer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: DIM.width
+  },
+  subHeaderText: {
+    fontSize: 40,
+    color: COLORS.white,
+    fontWeight: '100',
+    textAlign: 'center'
+  },
+  additionalInfoText: {
+    fontSize: 20,
+    fontWeight: '300',
+    textAlign: 'center',
+    color: COLORS.red
+  },
+  forgotPasswordText: {
+    fontSize: 15,
+    fontWeight: '100',
+    color: COLORS.yellow
+  },
   buttonStyle: {
     width: DIM.width * 0.8,
     height: 75,
@@ -29,5 +63,19 @@ export const styles = StyleSheet.create({
     fontSize: 33,
     fontWeight: '100',
     color: COLORS.darkBlue
+  },
+  footerText: {
+    fontSize: 15,
+    fontWeight: '100',
+    color: COLORS.white
+  },
+  iconWrapper: {
+    padding: 8,
+    backgroundColor: COLORS.white,
+    borderRadius: 50
+  },
+  icon: {
+    width: 50,
+    height: 50
   }
 });

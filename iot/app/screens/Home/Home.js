@@ -10,7 +10,8 @@ import {
   ScrollView,
   StatusBar,
   TouchableOpacity,
-  Image
+  Image,
+  Keyboard
 } from 'react-native';
 import Ripple from 'react-native-material-ripple';
 import * as Animatable from 'react-native-animatable';
@@ -20,7 +21,8 @@ import { Transition } from 'react-navigation-fluid-transitions';
 import { LinearGradient } from 'expo';
 import { ProgressCircle } from 'react-native-svg-charts';
 import { ClipPath, Defs, Rect, Stop, Text as TextSVG } from 'react-native-svg';
-
+import Modal from 'react-native-modal';
+import { Auth } from 'aws-amplify';
 import {
   COLORS,
   DIM,
@@ -31,8 +33,8 @@ import {
   TRENDS_TAGLINES
 } from '../../resources/constants';
 
-const FAKE_NUMBER_BASE = 2000;
-const UNIT = 'W';
+const FAKE_NUMBER_BASE = 0;
+const UNIT = 'KWH';
 const FULL_UNIT = 'Watts';
 
 const Separator = props => (
@@ -55,6 +57,9 @@ TODO ADD A smiley face menu, appliance menu, percent an appliance used
 
 const fake_pie_data = Object.values(fakeData);
 
+/*
+1. Check credentials and if there is no registered device, show one page. Otherwise show the home page after querying the infomation
+*/
 export default class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -62,13 +67,26 @@ export default class Home extends React.Component {
     this.widthOfSquares = (DIM.width - 10 * 4) / 2;
 
     this.state = {
-      progress: 0.4,
+      progress: 0.0,
       labelWidth: 0,
-      notification: true
+      notification: true,
+      modalOpen: false,
+      energyUsed: 0,
+      cost: 0
     };
   }
   getCurrentDate() {
     return '7/18';
+  }
+
+  signOut() {
+    this.setState({ modalOpen: false });
+    Auth.signOut()
+      .then(data => {
+        this.props.navigation.navigate('loginHome');
+        console.log(data);
+      })
+      .catch(err => console.log(err));
   }
 
   render() {
@@ -82,6 +100,16 @@ export default class Home extends React.Component {
         <StatusBar barStyle="light-content" />
         <View style={styles.header}>
           <Text style={styles.headerText}>Hello Navin</Text>
+          <TouchableOpacity
+            style={{ position: 'absolute', right: 0, padding: 15 }}
+            onPress={() => this.setState({ modalOpen: !this.state.modalOpen })}
+          >
+            <Image
+              style={{ width: 35, height: 35 }}
+              source={IMAGES.signOut}
+              resizeMode={'contain'}
+            />
+          </TouchableOpacity>
         </View>
         <View
           style={{
@@ -164,7 +192,7 @@ export default class Home extends React.Component {
                 }
               ]}
             >
-              {'Excellent'}
+              {'Great'}
             </Text>
             <Transition shared={'logo'}>
               <Image
@@ -206,7 +234,9 @@ export default class Home extends React.Component {
               ]}
             >
               <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.subHeaderText2}>200</Text>
+                <Text style={styles.subHeaderText2}>
+                  {this.state.energyUsed}
+                </Text>
                 <Text style={styles.subHeaderTextUnit}> {UNIT}</Text>
               </View>
               <Text style={styles.subHeaderText}>Energy Used</Text>
@@ -228,7 +258,7 @@ export default class Home extends React.Component {
             >
               <View style={{ flexDirection: 'row' }}>
                 <Text style={styles.subHeaderTextUnit}>$</Text>
-                <Text style={styles.subHeaderText2}>12</Text>
+                <Text style={styles.subHeaderText2}>{this.state.cost}</Text>
               </View>
               <Text style={styles.subHeaderText}>Cost</Text>
             </Animatable.View>
@@ -294,6 +324,36 @@ export default class Home extends React.Component {
               </Animatable.View>
             </Ripple>
           </View>
+          <Modal
+            backdropOpacity={0.3}
+            isVisible={this.state.modalOpen}
+            onBackdropPress={() => this.setState({ modalOpen: false })}
+            animationOut={'flipOutY'}
+            animationIn={'flipInY'}
+          >
+            <View style={styles.signOutModal}>
+              <View style={styles.signOutHeader}>
+                <Text style={styles.signOutHeaderText}>
+                  Would you like to sign out?
+                </Text>
+              </View>
+              <View style={styles.signOutBody}>
+                <TouchableOpacity
+                  style={styles.signOutButtons}
+                  onPress={() => this.signOut()}
+                >
+                  <Text style={styles.signOutText}>Sign Out</Text>
+                </TouchableOpacity>
+                <View style={{ padding: 20 }} />
+                <TouchableOpacity
+                  style={styles.signOutButtons}
+                  onPress={() => this.setState({ modalOpen: false })}
+                >
+                  <Text style={styles.signOutText}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
         </View>
       </LinearGradient>
     );
@@ -301,13 +361,48 @@ export default class Home extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  signOutModal: {
+    flex: 0.3,
+    borderRadius: 15,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#00000080'
+  },
+  signOutHeader: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  signOutHeaderText: {
+    fontSize: 50,
+    fontWeight: '100',
+    color: 'white',
+    textAlign: 'center'
+  },
+  signOutText: {
+    fontSize: 24,
+    fontWeight: '200',
+    color: COLORS.darkBlue,
+    textAlign: 'center'
+  },
+  signOutBody: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: DIM.width
+  },
+  signOutButtons: {
+    padding: 20,
+    backgroundColor: COLORS.yellow,
+    borderRadius: 15
+  },
+
   container: {
     flex: 1,
     alignItems: 'center'
   },
   header: {
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     flex: 0.18,
     marginTop: 20,
     width: DIM.width
