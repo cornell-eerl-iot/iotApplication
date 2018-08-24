@@ -7,12 +7,15 @@ This application is a cross platform application (iOS and Android) that displays
 
 ## App Demonstration
 
+<img src="https://github.com/cornell-eerl-iot/iotApplication/blob/master/iot/app/resources/appDemo.gif" width="300" />
 
 ## Technologies used for the Application
 
 1. React Native
 2. AWS Relational Database System, Cognito, Amplify
 
+## Author
 
+Navin Ramsaroop, CS Major at Cornell University
 
 
