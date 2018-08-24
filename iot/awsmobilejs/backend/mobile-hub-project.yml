@@ -14,19 +14,10 @@ features:
   sign-in: !com.amazonaws.mobilehub.v0.SignIn 
     attributes:
       enabled: true
-      optional-sign-in: false
+      optional-sign-in: true
     components:
       sign-in-user-pools: !com.amazonaws.mobilehub.v0.UserPoolsIdentityProvider 
         attributes:
-          mfa-configuration: OFF
-          name: userpool
-          password-policy: !com.amazonaws.mobilehub.ConvertibleMap 
-            min-length: '8'
-            require-lower-case: true
-            require-numbers: true
-            require-symbols: true
-            require-upper-case: true
-          standard-attributes: '["name"]'
-          username-attributes: '["email"]'
+          user-pool-id: us-east-2_ojGSUQkzf
 name: iot-electricity-monitoring
 region: us-east-2

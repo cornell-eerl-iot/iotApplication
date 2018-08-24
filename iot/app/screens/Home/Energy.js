@@ -19,7 +19,7 @@ import { COLORS, DIM, IMAGES } from '../../resources/constants';
 import { LinearGradient } from 'expo';
 import { ProgressCircle } from 'react-native-svg-charts';
 
-const UNIT = 'G';
+const UNIT = 'W';
 
 const INTERVAL = 2000;
 const MAX_FAKE_DATA = 100;

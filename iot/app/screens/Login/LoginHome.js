@@ -21,7 +21,7 @@ export default class Login extends React.Component {
   }
 
   onSuccessfulAuth(user) {
-    if (user.attributes.deviceId) {
+    if (user.attributes['custom:deviceId'] != 0) {
       this.props.navigation.navigate('home');
     } else {
       this.props.navigation.navigate('register_device');

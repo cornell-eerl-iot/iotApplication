@@ -59,11 +59,15 @@ export const IMAGES = {
 };
 
 export const COLORS = {
-  darkBlueGradient1: ['#001F54', '#003187'],
+  darkLightBlueGradient: ['#001F54', '#00CECB'],
+  lightDarkBlueGradient: ['#00CECB', '#001F54'],
+  lightBlueGradient: ['#00CECB', '#02b3ff'],
   darkBlueGradient: ['#001F54', '#003ba3'],
   redGradient: ['#FF5E5B', '#ff706d'],
   yellowGradient: ['#FFED66', '#f9f263'],
   yellowBlueGradient: ['#FFED66', '#001F54'],
+  blueYellowGradient: ['#001F54', '#FFED66'],
+  lightBlueYellowGradient: ['#00CECB', '#FFED66'],
   darkBlue: '#001F54',
   lightBlue: '#00CECB',
   red: '#FF5E5B',
@@ -71,8 +75,8 @@ export const COLORS = {
   white: '#ffffff',
   baselineRed: '#FF5E5B',
   baselineGreen: '#0cfc55',
-  black: '#000',
-  green: '#42f474',
+  black: '#000000',
+  green: '#77ffab',
   gray: '#d1d1d1'
 };
 
@@ -82,6 +86,7 @@ export const DIM = {
 };
 
 export const APPLIANCES = {
+  //camel casing
   blender: {
     title: 'Blender',
     source: IMAGES.blenderBlack
@@ -182,10 +187,11 @@ FAKE DATA
 
 export const fakeDataArchive = {
   Blender: {
-    title: 'Blender',
+    title: 'Blender', //check
     efficiency: 2,
-    averageEnergyUsage: 15,
+    averageEnergyUsage: 15, //check
     percentOfDay: 15,
+    percentOfWeek: 10,
     currentEnergyUsage: 0
   },
   Kettle: {
@@ -193,6 +199,8 @@ export const fakeDataArchive = {
     efficiency: 2,
     averageEnergyUsage: 15,
     percentOfDay: 15,
+    percentOfWeek: 9,
+    percentOfMonth: 20,
     currentEnergyUsage: 10
   },
   Microwave: {
@@ -200,6 +208,8 @@ export const fakeDataArchive = {
     efficiency: 2,
     averageEnergyUsage: 15,
     percentOfDay: 15,
+    percentOfWeek: 8,
+    percentOfMonth: 18,
     currentEnergyUsage: 100
   },
   Outlet: {
@@ -207,6 +217,8 @@ export const fakeDataArchive = {
     efficiency: 2,
     averageEnergyUsage: 15,
     percentOfDay: 15,
+    percentOfWeek: 7,
+    percentOfMonth: 20,
     currentEnergyUsage: 30
   },
   Television: {
@@ -214,6 +226,8 @@ export const fakeDataArchive = {
     efficiency: 2,
     averageEnergyUsage: 15,
     percentOfDay: 15,
+    percentOfWeek: 6,
+    percentOfMonth: 15,
     currentEnergyUsage: 45
   },
 
@@ -221,6 +235,8 @@ export const fakeDataArchive = {
     title: 'Unknown',
     averageEnergyUsage: 15,
     percentOfDay: 15,
+    percentOfWeek: 5,
+    percentOfMonthh: 5,
     currentEnergyUsage: 50
   },
 
@@ -229,6 +245,8 @@ export const fakeDataArchive = {
     efficiency: 2,
     averageEnergyUsage: 15,
     percentOfDay: 15,
+    percentOfWeek: 4,
+    percentOfMonth: 13,
     currentEnergyUsage: 0
   },
   Shower: {
@@ -236,6 +254,8 @@ export const fakeDataArchive = {
     efficiency: 2,
     averageEnergyUsage: 15,
     percentOfDay: 15,
+    percentOfWeek: 3,
+    percentOfMonth: 10,
     currentEnergyUsage: 0
   },
   Hose: {
@@ -243,13 +263,17 @@ export const fakeDataArchive = {
     efficiency: 2,
     averageEnergyUsage: 15,
     percentOfDay: 15,
+    percentOfWeek: 2,
+    percentOfMonth: 8,
     currentEnergyUsage: 0
   },
   Sink: {
-    sink: 'Sink',
+    title: 'Sink',
     efficiency: 2,
     averageEnergyUsage: 15,
     percentOfDay: 15,
+    percentOfWeek: 1,
+    percentOfMonth: 5,
     currentEnergyUsage: 0
   }
 };
@@ -259,8 +283,8 @@ export const fakeData = {
   Kettle: fakeDataArchive.Kettle,
   Microwave: fakeDataArchive.Microwave,
   Outlet: fakeDataArchive.Outlet,
-  Television: fakeDataArchive.Television
-};
+  Unknown: fakeDataArchive.Unknown
+}; //exact title casing
 
 export const fake_timeline_data = [
   {
@@ -337,6 +361,12 @@ export const fake_timeline_data1 = [
     title: APPLIANCES.shower.title,
     icon: APPLIANCES.shower.source,
     description: 'On for 15 minutes.'
+  },
+  {
+    time: '8:50am',
+    title: APPLIANCES.dishwasher.title,
+    icon: APPLIANCES.dishwasher.source,
+    description: 'On for 45 minutes.'
   }
 ];
 
@@ -385,7 +415,7 @@ export function getApplianceInfo(title) {
   info.efficiency = appliance.efficiency;
   info.averageEnergyUsage = appliance.averageEnergyUsage;
   info.percentOfDay = appliance.percentOfDay;
+  info.percentOfWeek = appliance.percentOfWeek;
   info.currentEnergyUsage = appliance.currentEnergyUsage;
   return info;
 }
-export function getPieData() {}

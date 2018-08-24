@@ -7,13 +7,32 @@ import { Sae, Kaede, Kohana, Makiko } from 'react-native-textinput-effects';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Transition } from 'react-navigation-fluid-transitions';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
-const GetData = `query getData($userId:String!) {
+const GetData = `
+query getData($userId:String!) {
   getIotData(userId: $userId) {
     powerSeries{time, power}
     devices{title, powerUsage}
 
   }
 }`;
+
+const updateClaimed = `
+mutation updateData($updateUserData:UpdateIotDataInput!){
+      updateIotData(input:$updateUserData){
+        userId
+        claimed
+      }
+    }`;
+
+const createNew = `
+mutation createData($userData:CreateIotDataInput!) {
+      createIotData(input:$userData) {
+				claimed
+        userId
+        devices{title, powerUsage}
+        powerSeries{time, power}
+      }
+    }`;
 
 export default class RegisterDevice extends React.Component {
   static propTypes = {};
@@ -36,17 +55,50 @@ export default class RegisterDevice extends React.Component {
     console.log('oneEvent', oneEvent);
 
     //if null, the device does not already exist or is not claimed
+
     if (oneEvent.data.getIotData == null || !oneEvent.data.getIotData.claimed) {
       Auth.currentAuthenticatedUser()
         .then(user => {
           console.log('user', user);
           Auth.updateUserAttributes(user, {
-            custom: {
-              deviceId: this.state.deviceId
-            }
+            'custom:deviceId': this.state.deviceId
           })
             .then(success => {
               console.log('success', success);
+
+              /*User typed in a deviceId that did not exist or was not claimed, so
+              id is successfully linked to this account*/
+
+              //if does not exist, make new one
+              if (oneEvent.data.getIotData == null) {
+                API.graphql(
+                  graphqlOperation(createNew, {
+                    userData: {
+                      userId: this.state.deviceId,
+                      claimed: true,
+                      devices: [],
+                      powerSeries: []
+                    }
+                  })
+                )
+                  .then(data => this.props.navigation.navigate('home'))
+                  .catch(err => {
+                    console.log('err in creating new', err);
+                  });
+              } else {
+                API.graphql(
+                  graphqlOperation(updateClaimed, {
+                    updateUserData: {
+                      userId: this.state.deviceId,
+                      claimed: true
+                    }
+                  })
+                )
+                  .then(data => this.props.navigation.navigate('home'))
+                  .catch(err => {
+                    console.log('err in updating', err);
+                  });
+              }
             })
             .catch(err => {
               console.log('err in updateUserAttribute', err);
@@ -58,11 +110,6 @@ export default class RegisterDevice extends React.Component {
     } else {
       console.log('device already registered.');
     }
-
-    // const oneEvent = await API.graphql(
-    //   graphqlOperation(GetData, { userId: '12345' })
-    // );
-    // console.log(oneEvent);
   }
 
   render() {
@@ -71,7 +118,7 @@ export default class RegisterDevice extends React.Component {
         style={styles.container}
         start={[0, 1.0]}
         end={[0, 0.0]}
-        colors={COLORS.yellowBlueGradient}
+        colors={COLORS.lightBlueYellowGradient}
       >
         <View style={styles.header}>
           <Text style={styles.headerText}>Register your device!</Text>

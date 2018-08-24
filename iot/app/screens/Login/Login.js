@@ -78,13 +78,12 @@ export default class Login extends React.Component {
       submitActive: false
     };
   }
-  onSuccessfulAuth(cognitoUser) {
-    // if (user.attributes.deviceId) {
-    //   this.props.navigation.navigate('home');
-    // } else {
-    //   this.props.navigation.navigate('register_device');
-    // }
-    //check if they have a device id
+  onSuccessfulAuth(user) {
+    if (user.attributes['custom:deviceId'] != 0) {
+      this.props.navigation.navigate('home');
+    } else {
+      this.props.navigation.navigate('register_device');
+    }
   }
 
   async _handleSubmit() {
@@ -108,10 +107,14 @@ export default class Login extends React.Component {
         });
     } else if (this.state.mode.id == 'PASSWORD') {
       Auth.signIn(this.state.username, this.state.password)
-        .then(user => {
-          console.log('success: ', user);
+        .then(data => {
+          console.log('success: ', data);
           Keyboard.dismiss();
-          //  this.onSuccessfulAuth(user);
+          Auth.currentAuthenticatedUser()
+            .then(user => {
+              this.onSuccessfulAuth(user);
+            })
+            .then(err => console.log('error in sign in', err));
         })
         .catch(err => {
           console.log('error', err);

@@ -3,14 +3,9 @@ import {
   StyleSheet,
   Text,
   View,
-  ImageBackground,
-  Dimensions,
   Animated,
-  Easing,
-  ScrollView,
   StatusBar,
   TouchableOpacity,
-  Image,
   FlatList
 } from 'react-native';
 import Pie from '../../components/PieChart/PieChart4';
@@ -23,17 +18,14 @@ import {
   APPLIANCES,
   fake_timeline_data,
   IMAGES,
-  getApplianceInfo,
-  EMOTIONS,
-  getColor
+  getApplianceInfo
 } from '../../resources/constants';
 import { Transition } from 'react-navigation-fluid-transitions';
 import { LinearGradient } from 'expo';
 import Timeline from 'react-native-timeline-listview';
-import Card from '../../components/TextSquare/Card';
 import * as Animatable from 'react-native-animatable';
 import CollapsableMenu from '../../components/TabBar/CollapsableMenu';
-const UNIT = '\n W';
+const UNIT = '\n G';
 
 const DAY_DETAILS = 'Appliances';
 const FEED = 'Feed';
@@ -49,8 +41,17 @@ const DAY_LIFETIME = '∞';
 const FAKE_NUMBER_BASE = 2000; //pull from database to generate this number
 const TITLES = [PIE, DAY_DETAILS, FEED];
 const PIE_TITLES = [DAY, DAY_7, DAY_30, DAY_60, DAY_90, DAY_YEAR, DAY_LIFETIME];
+const PIE_DATA_LINK = [
+  'percentOfDay',
+  'percentOfWeek',
+  'percentOfMonth',
+  'percentOfTwoMonth',
+  'percentOfThreeMonth',
+  'percentOfYear',
+  'percentOfLifetime'
+];
 const TAB_IMAGES = [IMAGES.pieChart, IMAGES.retroTelevision, IMAGES.feed];
-const INTERVAL = 2000;
+
 const fake_pie_data = Object.values(fakeData);
 
 export default class Day extends React.Component {
@@ -61,7 +62,7 @@ export default class Day extends React.Component {
       selectedSlice: null,
       centerLabel: '',
       tabSelected: TITLES[0],
-      selectedTimePeriod: PIE_TITLES[0]
+      selectedTimePeriodIndex: 0
     };
   }
 
@@ -71,27 +72,16 @@ export default class Day extends React.Component {
     });
   }
 
-  componentDidMount() {
-    // this._interval = setInterval(() => {
-    //   this.generateRandomWatt();
-    // }, INTERVAL);
-  }
-
-  componentWillUnmount() {
-    // clearInterval(this._interval);
-  }
-
   renderTab() {
     switch (this.state.tabSelected) {
       case FEED:
         return (
-          <Animatable.View
-            delay={0}
-            duration={500}
-            style={{
-              backgroundColor: '#ffffff20',
-              borderRadius: 20
-            }}
+          <LinearGradient
+            style={styles.container}
+            start={[0, 0.0]}
+            end={[0, 1.0]}
+            colors={COLORS.darkBlueGradient}
+            style={{ borderRadius: 10 }}
           >
             <Timeline
               circleSize={30}
@@ -120,7 +110,7 @@ export default class Day extends React.Component {
                 backgroundColor: COLORS.darkBlue + '10'
               }}
             />
-          </Animatable.View>
+          </LinearGradient>
         );
         break;
       case PIE:
@@ -128,9 +118,13 @@ export default class Day extends React.Component {
           <View style={styles.pieContainer}>
             <CollapsableMenu
               onPress={index => {
-                this.setState({ selectedTimePeriod: PIE_TITLES[index] });
+                this.setState({
+                  selectedTimePeriodIndex: index,
+                  centerLabel: '',
+                  selectedSlice: null
+                });
               }}
-              selected={this.state.selectedTimePeriod}
+              selected={PIE_TITLES[this.state.selectedTimePeriodIndex]}
               image={IMAGES.electricity}
               titles={PIE_TITLES}
               height={50}
@@ -141,6 +135,7 @@ export default class Day extends React.Component {
             <Transition shared={'pie'}>
               <Pie
                 data={fake_pie_data}
+                valueKey={PIE_DATA_LINK[this.state.selectedTimePeriodIndex]}
                 width={DIM.width}
                 sliceColor={COLORS.yellow}
                 fillColor={COLORS.red}
@@ -163,7 +158,9 @@ export default class Day extends React.Component {
                       centerLabel:
                         fake_pie_data[index].title +
                         '\n' +
-                        fake_pie_data[index].percentOfDay +
+                        fake_pie_data[index][
+                          PIE_DATA_LINK[this.state.selectedTimePeriodIndex]
+                        ] +
                         '%'
                     });
                   }

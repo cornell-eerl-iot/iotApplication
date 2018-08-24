@@ -107,7 +107,8 @@ export default class CollapsableMenu extends React.Component {
               backgroundColor: this.props.backgroundColor,
               height: this.props.height,
               width: this.state.menuWidth,
-              right: this.props.height * 0.5
+              right: this.props.height * 0.5,
+              overflow: 'hidden'
             }
           ]}
         >

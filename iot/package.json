@@ -41,6 +41,7 @@
     "react-native-transition": "^1.1.8",
     "react-native-waveview": "^1.0.0",
     "react-navigation": "^2.5.2",
-    "react-navigation-fluid-transitions": "^0.2.1"
+    "react-navigation-fluid-transitions": "^0.2.1",
+    "request": "^2.87.0"
   }
 }

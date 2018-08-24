@@ -33,16 +33,17 @@ import {
   TRENDS_TAGLINES
 } from '../../resources/constants';
 
-const FAKE_NUMBER_BASE = 0;
-const UNIT = 'KWH';
+const FAKE_NUMBER_BASE = 2214;
+const UNIT = 'W';
 const FULL_UNIT = 'Watts';
-
+const UNIT_USED = 'Energy';
+const INITIAL_PROGRESS = 0.7;
 const Separator = props => (
   <View
     style={{
       width: props.width,
       height: props.height,
-      backgroundColor: COLORS.black,
+      backgroundColor: COLORS.white,
       alignItems: 'center',
       justifyContent: 'center'
     }}
@@ -67,12 +68,12 @@ export default class Home extends React.Component {
     this.widthOfSquares = (DIM.width - 10 * 4) / 2;
 
     this.state = {
-      progress: 0.0,
+      progress: INITIAL_PROGRESS,
       labelWidth: 0,
       notification: true,
       modalOpen: false,
-      energyUsed: 0,
-      cost: 0
+      energyUsed: 200,
+      cost: 10
     };
   }
   getCurrentDate() {
@@ -93,7 +94,7 @@ export default class Home extends React.Component {
     return (
       <LinearGradient
         style={styles.container}
-        start={[0, 0.5]}
+        start={[0, 0.0]}
         end={[0, 1.0]}
         colors={COLORS.darkBlueGradient}
       >
@@ -143,11 +144,11 @@ export default class Home extends React.Component {
               position: 'absolute'
             }}
             progress={1}
-            progressColor={COLORS.darkBlue}
+            progressColor={COLORS.yellow}
             startAngle={-Math.PI * 0.8}
             endAngle={Math.PI * 0.8}
             backgroundColor={COLORS.white}
-            strokeWidth={10}
+            strokeWidth={0}
             cornerRadius={1}
           />
           <Text
@@ -166,7 +167,7 @@ export default class Home extends React.Component {
               {
                 position: 'absolute',
                 top: DIM.width / 2 - 10,
-                color: '#dddddd',
+                color: COLORS.white,
                 fontWeight: '100'
               }
             ]}
@@ -187,7 +188,7 @@ export default class Home extends React.Component {
             <Text
               style={[
                 {
-                  color: '#fff',
+                  color: COLORS.white,
                   fontWeight: '100'
                 }
               ]}
@@ -207,7 +208,7 @@ export default class Home extends React.Component {
             <Text
               style={[
                 {
-                  color: '#fff',
+                  color: COLORS.white,
                   fontWeight: '100'
                 }
               ]}
@@ -229,7 +230,7 @@ export default class Home extends React.Component {
                   width: this.widthOfSquares,
                   height: this.widthOfSquares / 2,
                   marginRight: 10,
-                  backgroundColor: '#ffffff03'
+                  backgroundColor: '#ffffff10'
                 }
               ]}
             >
@@ -239,7 +240,7 @@ export default class Home extends React.Component {
                 </Text>
                 <Text style={styles.subHeaderTextUnit}> {UNIT}</Text>
               </View>
-              <Text style={styles.subHeaderText}>Energy Used</Text>
+              <Text style={styles.subHeaderText}>{UNIT_USED} Used</Text>
             </Animatable.View>
 
             <Animatable.View
@@ -252,7 +253,7 @@ export default class Home extends React.Component {
                 {
                   width: this.widthOfSquares,
                   height: this.widthOfSquares / 2,
-                  backgroundColor: '#ffffff03'
+                  backgroundColor: '#ffffff10'
                 }
               ]}
             >
@@ -285,6 +286,7 @@ export default class Home extends React.Component {
                 <Transition shared={'pie'}>
                   <Pie
                     data={fake_pie_data}
+                    valueKey={'percentOfDay'}
                     width={this.widthOfSquares}
                     sliceColor={COLORS.yellow}
                     fillColor={COLORS.red}
@@ -330,6 +332,7 @@ export default class Home extends React.Component {
             onBackdropPress={() => this.setState({ modalOpen: false })}
             animationOut={'flipOutY'}
             animationIn={'flipInY'}
+            animationInTiming={700}
           >
             <View style={styles.signOutModal}>
               <View style={styles.signOutHeader}>
@@ -468,7 +471,7 @@ const styles = StyleSheet.create({
         height: this.widthOfSquares * 0.6,
         width: this.widthOfSquares * 0.6,
         shadowOffset: { width: 2, height: 2 },
-        shadowColor: COLORS.black,
+        shadowColor: COLORS.white,
         shadowOpacity: 0.8
       }}
       resizeMode={'contain'}

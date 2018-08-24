@@ -15,7 +15,7 @@ import {
   IMAGES
 } from '../../resources/constants';
 import PropTypes from 'prop-types';
-
+import { LinearGradient } from 'expo';
 const FINAL_HEIGHT = DIM.height * 0.4;
 const INITIAL_HEIGHT = 100;
 export default class ModernCard extends React.Component {
@@ -97,56 +97,68 @@ export default class ModernCard extends React.Component {
           style={[
             styles.container,
             {
-              height: this.state.height,
-              backgroundColor: this.state.isExpanded
-                ? 'transparent'
-                : 'transparent'
+              height: this.state.height
             }
           ]}
         >
-          <Text style={styles.headerText}>{title}</Text>
+          <LinearGradient
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 8
+            }}
+            start={[0, 0.0]}
+            end={[0, 1.0]}
+            colors={COLORS.darkBlueGradient}
+          >
+            <Text style={styles.headerText}>{title}</Text>
 
-          <View
-            style={[
-              styles.currentEnergyUsage,
-              {
-                backgroundColor:
-                  currentEnergyUsage == 0 ? COLORS.gray : COLORS.green
-              }
-            ]}
-          >
-            <Text style={styles.subHeaderText}>
-              {currentEnergyUsage == 0 ? 'OFF' : currentEnergyUsage + 'W'}
-            </Text>
-          </View>
-          <Animated.View
-            style={[
-              styles.hiddenComponent,
-              {
-                height: this.state.heightComponent
-              }
-            ]}
-          >
-            <View style={{ flexDirection: 'row' }}>
-              <View style={{ flex: 0.01 }} />
-              <View style={styles.subHeaderText1Wrapper}>
-                <Text style={styles.subHeaderText1}>Average Power</Text>
-                <Text style={styles.subHeaderText1}>{averageEnergyUsage}</Text>
-              </View>
-              <View style={{ flex: 0.01 }} />
-              <View style={styles.subHeaderText2Wrapper}>
-                <Text style={styles.subHeaderText2}>Average Run Time</Text>
-                <Text style={styles.subHeaderText2}>28 Minutes</Text>
-              </View>
-              <View style={{ flex: 0.01 }} />
-            </View>
-            <View style={styles.subHeaderText4Wrapper}>
-              <Text style={styles.subHeaderText4}>
-                Consider getting an energy efficient device! You would save $56
-                over one year with your current usage.
+            <View
+              style={[
+                styles.currentEnergyUsage,
+                {
+                  backgroundColor:
+                    currentEnergyUsage == 0 ? COLORS.gray : COLORS.green
+                }
+              ]}
+            >
+              <Text style={styles.subHeaderText}>
+                {currentEnergyUsage == 0 ? 'OFF' : currentEnergyUsage + 'W'}
               </Text>
             </View>
-          </Animated.View>
+            <Animated.View
+              style={[
+                styles.hiddenComponent,
+                {
+                  height: this.state.heightComponent
+                }
+              ]}
+            >
+              <View style={{ flexDirection: 'row' }}>
+                <View style={{ height: 5 }} />
+                <View style={styles.subHeaderText1Wrapper}>
+                  <Text style={styles.subHeaderText1}>Average Power</Text>
+                  <Text style={styles.subHeaderText1}>
+                    {averageEnergyUsage + ' W'}
+                  </Text>
+                </View>
+                <View style={{ height: 5 }} />
+                <View style={styles.subHeaderText2Wrapper}>
+                  <Text style={styles.subHeaderText2}>Average Run Time</Text>
+                  <Text style={styles.subHeaderText2}>28 Minutes</Text>
+                </View>
+              </View>
+
+              <View style={styles.subHeaderText4Wrapper}>
+                <View style={{ height: 5 }} />
+                <Text style={styles.subHeaderText4}>
+                  Consider getting an energy efficient device! You would save
+                  $56 over one year with your current usage.
+                </Text>
+              </View>
+            </Animated.View>
+          </LinearGradient>
         </Animated.View>
         <View style={styles.imageWrapper}>
           <Image style={styles.image} source={image} resizeMode={'contain'} />
@@ -187,7 +199,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     alignItems: 'center',
     justifyContent: 'space-around',
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: '#fff'
   },
   imageWrapper: {
@@ -226,7 +238,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 45,
     fontWeight: '200',
-    color: COLORS.yellow
+    color: COLORS.white
   },
   subHeaderText: {
     fontSize: 25,
@@ -236,25 +248,25 @@ const styles = StyleSheet.create({
   subHeaderText1: {
     fontSize: 20,
     fontWeight: '100',
-    color: COLORS.black,
+    color: COLORS.white,
     textAlign: 'center'
   },
   subHeaderText2: {
     fontSize: 20,
     fontWeight: '100',
-    color: COLORS.black,
+    color: COLORS.white,
     textAlign: 'center'
   },
   subHeaderText3: {
     fontSize: 20,
     fontWeight: '100',
-    color: COLORS.black,
+    color: COLORS.white,
     textAlign: 'center'
   },
   subHeaderText4: {
     fontSize: 18,
     fontWeight: '100',
-    color: COLORS.black,
+    color: COLORS.white,
     textAlign: 'center',
     textAlign: 'center'
   },
@@ -267,21 +279,25 @@ const styles = StyleSheet.create({
   },
   hiddenComponent: {
     justifyContent: 'space-around',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingTop: 10
   },
 
   subHeaderText4Wrapper: {
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
+    borderRightWidth: 1,
+    borderLeftWidth: 1,
     paddingLeft: 10,
     paddingRight: 10,
     marginBottom: 10,
     borderRadius: 10,
     shadowOffset: { width: 4, height: 4 },
     shadowColor: COLORS.black,
-    shadowOpacity: 0.5
+    shadowOpacity: 0.5,
+    borderColor: COLORS.white
   },
   subHeaderText1Wrapper: {
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
     marginBottom: 10,
     borderRadius: 10,
     shadowOffset: { width: 4, height: 4 },
@@ -289,10 +305,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 0.5
+    flex: 0.5,
+    borderRightWidth: 1,
+    borderLeftWidth: 1,
+    borderColor: COLORS.white
   },
   subHeaderText2Wrapper: {
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
     marginBottom: 10,
     borderRadius: 10,
     shadowOffset: { width: 4, height: 4 },
@@ -300,6 +319,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 0.5
+    flex: 0.5,
+    borderRightWidth: 1,
+    borderLeftWidth: 1,
+    borderColor: COLORS.white
   }
 });

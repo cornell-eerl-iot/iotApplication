@@ -22,8 +22,10 @@ import { Auth } from 'aws-amplify';
 
 const IMAGE_HEIGHT = 200;
 const IMAGE_HEIGHT_SMALL = 150;
-
+const pass = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+const USER_DOES_NOT_EXIST = 'UserNotFoundException';
 const NAME = {
+  id: 'NAME',
   image: 'user',
   title: "What's your name?",
   subTitle: 'Just so we know what to call you by!',
@@ -32,6 +34,7 @@ const NAME = {
 };
 
 const EMAIL = {
+  id: 'EMAIL',
   image: 'envelope',
   title: 'What email would you like to use?',
   subTitle: 'We will send a confirmation message to your email shortly.',
@@ -40,6 +43,7 @@ const EMAIL = {
 };
 
 const PASSWORD = {
+  id: 'PASSWORD',
   image: 'key',
   title: 'What do you want your password to be?',
   subTitle: '',
@@ -48,6 +52,7 @@ const PASSWORD = {
 };
 
 const CONFIRMATION = {
+  id: 'CONFIRMATION',
   image: 'circle-thin',
   title: 'Enter the confirmation code that was emailed to you.',
   subTitle: '',
@@ -69,7 +74,10 @@ export default class Login extends React.Component {
       password: '',
       name: '',
       text: '',
-      confirmationCode: 0
+      confirmationCode: 0,
+      submitActive: false,
+      additionalInfo: '',
+      additionalInfoStyles: null
     };
   }
 
@@ -78,31 +86,67 @@ export default class Login extends React.Component {
       username: this.state.email,
       password: this.state.password,
       attributes: {
-        name: this.state.name
+        name: this.state.name,
+        'custom:deviceId': '0'
       }
     })
-      .then(data => console.log(data))
+      .then(data => {
+        console.log('successful sign up: ', data);
+      })
       .catch(err => console.log(err));
   }
 
   _confirmUser() {
     Auth.confirmSignUp(this.state.email, this.state.confirmationCode, {})
       .then(data => {
-        console.log(data);
+        console.log('confirm sign up data', data);
         Keyboard.dismiss();
-        this.props.navigation.navigate('home');
+        Auth.signIn(this.state.email, this.state.password).then(user => {
+          this.props.navigation.navigate('register_device');
+        });
       })
       .catch(err => console.log(err));
   }
 
   _handleSubmit() {
     if (this.state.mode == EMAIL) {
-      this.setState({ mode: PASSWORD, text: '' });
+      //this.setState({ mode: PASSWORD, text: '' , submitActive:});
+      Auth.signIn(this.state.email)
+        .then(user => {
+          console.log('SHOULD NEVER HAPPEN');
+        })
+        .catch(err => {
+          if (err.code == USER_DOES_NOT_EXIST) {
+            console.log('err, user not exists?', err);
+            this.setState({
+              mode: PASSWORD,
+              submitActive: false,
+              text: '',
+              additionalInfo: ''
+            });
+          } else {
+            console.log('err', err);
+            this.setState({
+              additionalInfo: 'You already have an account. Please log in.',
+              submitActive: false
+            });
+          }
+        });
     } else if (this.state.mode == NAME) {
-      this.setState({ mode: EMAIL, text: '' });
+      this.setState({
+        mode: EMAIL,
+        text: '',
+        submitActive: false,
+        additionalInfo: ''
+      });
     } else if (this.state.mode == PASSWORD) {
       this._signUp();
-      this.setState({ mode: CONFIRMATION, text: '' });
+      this.setState({
+        mode: CONFIRMATION,
+        text: '',
+        submitActive: false,
+        additionalInfo: ''
+      });
     } else if (this.state.mode == CONFIRMATION) {
       this._confirmUser();
     }
@@ -111,16 +155,46 @@ export default class Login extends React.Component {
   _handleChangedText(text) {
     if (this.state.mode == EMAIL) {
       this.setState({ email: text, text: text });
+      this.checkEmailVerification(text);
     } else if (this.state.mode == NAME) {
       this.setState({ name: text, text: text });
+      this.checkEmailVerification(text);
     } else if (this.state.mode == PASSWORD) {
       this.setState({ password: text, text: text });
+      this.checkPasswordVerification(text);
     } else if (this.state.mode == CONFIRMATION) {
       this.setState({ confirmationCode: text, text: text });
+      this.checkConfirmationVerification(text);
     }
   }
 
+  checkEmailVerification(text) {
+    this.setState({ submitActive: text.length > 0 });
+  }
+
+  checkPasswordVerification(text) {
+    this.setState({ submitActive: pass.test(text) });
+  }
+
+  checkConfirmationVerification(text) {
+    this.setState({ submitActive: text.length == 6 });
+  }
+
   render() {
+    let additionalInfo = null;
+
+    if (this.state.additionalInfo) {
+      additionalInfo = (
+        <View style={styles.subHeader}>
+          <Text
+            style={[styles.additionalInfoText, this.state.additionalInfoStyles]}
+          >
+            {this.state.additionalInfo}
+          </Text>
+        </View>
+      );
+    }
+
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <LinearGradient
@@ -142,7 +216,7 @@ export default class Login extends React.Component {
           <View style={styles.subHeader}>
             <Text style={styles.subHeaderText}>{this.state.mode.title}</Text>
           </View>
-
+          {additionalInfo}
           <View style={styles.textSubmit}>
             <Sae
               label={this.state.mode.fullTitle}
@@ -166,8 +240,16 @@ export default class Login extends React.Component {
             <View style={{ padding: 15 }} />
             <Transition shared="register">
               <TouchableOpacity
-                style={[styles.buttonStyle, { backgroundColor: COLORS.yellow }]}
+                style={[
+                  styles.buttonStyle,
+                  {
+                    backgroundColor: this.state.submitActive
+                      ? COLORS.yellow
+                      : COLORS.gray
+                  }
+                ]}
                 onPress={() => this._handleSubmit()}
+                disabled={!this.state.submitActive}
               >
                 <Text style={styles.buttonText}>
                   {this.state.mode.buttonTitle}

@@ -21,7 +21,8 @@ export default class Pie extends React.PureComponent {
     labelVisible: PropTypes.bool,
     fillColor: PropTypes.string,
     labelColor: PropTypes.string,
-    centerLabel: PropTypes.string
+    centerLabel: PropTypes.string,
+    valueKey: PropTypes.string
   };
 
   constructor(props) {
@@ -38,7 +39,7 @@ export default class Pie extends React.PureComponent {
     let value = null;
     if (selectedSlice) {
       label = selectedSlice.title;
-      value = selectedSlice.percentOfDay;
+      value = selectedSlice[this.props.valueKey];
     }
 
     let keys = [];
@@ -49,7 +50,7 @@ export default class Pie extends React.PureComponent {
     let values = [];
 
     this.props.data.forEach(element => {
-      values.push(element.percentOfDay);
+      values.push(element[this.props.valueKey]);
     });
 
     const data = keys.map((key, index) => {
