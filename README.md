@@ -1,4 +1,4 @@
-# iotApplication
+# Electricity Monitoring App
 
 The Energy and the Environment Research Laboratory at Cornell University is working on an electricity meter for building and households that measures the total energy going into the household, and disaggregates the data into appliance level energy usage. 
 
